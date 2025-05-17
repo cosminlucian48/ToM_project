@@ -29,6 +29,7 @@
     "vite": "^6.3.5"
   },
   "dependencies": {
-    "electron-squirrel-startup": "^1.0.1"
+    "electron-squirrel-startup": "^1.0.1",
+    "xlsx": "^0.18.5"
   }
 }

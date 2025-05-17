@@ -1,165 +1,214 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-
-// Import image assets
-import img1 from '../assets/image1.png';
-import img2 from '../assets/image2.png';
-import img3 from '../assets/image3.png';
-import img4 from '../assets/image4.png';
-import img5 from '../assets/image5.png';
-import img6 from '../assets/image6.png';
-import img7 from '../assets/image7.png';
+import React, { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import bunnyBlue from "../assets/bunny_blue.png";
+import bunnyRed from "../assets/bunny_red.png";
+import boatBlue from "../assets/boat_blue.png";
+import boatRed from "../assets/boat_red.png";
+import { game1Config } from "../utils/config.js";
 
 const images = [
-  img1, 
-  img2, 
-  // img3, 
-  // img4, 
-  // img5, 
-  // img6, 
-  // img7
+  { src: bunnyBlue, shape: "iepure", color: "albastru" },
+  { src: bunnyRed, shape: "iepure", color: "roșu" },
+  { src: boatBlue, shape: "barcă", color: "albastru" },
+  { src: boatRed, shape: "barcă", color: "roșu" },
 ];
 
-export default function Game1() {
-  const figRef = useRef(null);
-  const [phase, setPhase] = useState('idle'); // idle, animating, ready, timing, result, finished
-  const [round, setRound] = useState(0);
-  const [startTime, setStartTime] = useState(null);
-  const [result, setResult] = useState(null);
-  const [results, setResults] = useState([]);
+const topImages = [
+  { src: boatRed, shape: "barcă", color: "roșu", label: "barcă" }, // left
+  { src: bunnyBlue, shape: "iepure", color: "albastru", label: "iepure" }, // right
+];
+
+const Game1 = () => {
   const navigate = useNavigate();
+  const [round, setRound] = useState(0);
+  const [results, setResults] = useState([]);
+  const [swapped, setSwapped] = useState(false);
+  const [showSwapMsg, setShowSwapMsg] = useState(false);
+  const [waiting, setWaiting] = useState(false);
+  const timerRef = useRef(null);
 
-  const moveDuration = 2000;
+  const { roundsOrder, totalRounds, swapAt } = game1Config;
 
-  const startAnimation = () => {
-    setResult(null);
-    setPhase('animating');
-    const fig = figRef.current;
-    fig.style.transition = `left ${moveDuration}ms linear`;
-    fig.style.left = '90%';
+  // Determine rule
+  const getRule = () => (swapped ? "culoare" : "formă");
 
-    setTimeout(() => {
-      fig.style.transition = 'none';
-      fig.style.left = '0%';
-      setPhase('ready');
-    }, moveDuration);
-  };
+  // Handle click on top image
+  const handleChoice = (choiceIdx) => {
+    if (waiting) return;
+    setWaiting(true);
+    const shownIdx = roundsOrder[round];
+    const shown = images[shownIdx];
+    const rule = getRule();
+    const correct =
+      rule === "formă"
+        ? shown.shape === topImages[choiceIdx].shape
+        : shown.color === topImages[choiceIdx].color;
+    const responseTime = Math.round(performance.now() - timerRef.current);
 
-  const handleKeyPress = (e) => {
-    if (e.code !== 'Space') return;
-
-    if (phase === 'ready') {
-      setStartTime(Date.now());
-      setPhase('timing');
-    } else if (phase === 'timing') {
-      const guessTime = Date.now();
-      const diff = guessTime - startTime;
-      const error = diff - moveDuration;
-
-      const currentResult = {
+    setResults((prev) => [
+      ...prev,
+      {
         round: round + 1,
-        guess: diff,
-        error,
-        direction: error > 0 ? 'late' : 'early',
-      };
-
-      setResults(prev => [...prev, currentResult]);
-      setResult(currentResult);
-      setPhase('result');
-    }
+        shownShape: shown.shape,
+        shownColor: shown.color,
+        chosen: topImages[choiceIdx].label,
+        correct,
+        responseTime,
+        rule,
+      },
+    ]);
+    setTimeout(() => {
+      setRound((r) => r + 1);
+      setWaiting(false);
+    }, 400);
   };
 
-  const nextRound = () => {
-    if (round + 1 < images.length) {
-      setRound(prev => prev + 1);
-      startAnimation();
-    } else {
-      setPhase('finished');
-    }
-  };
-
+  // Swap rule in the middle
   useEffect(() => {
-    window.addEventListener('keydown', handleKeyPress);
-    return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [phase, startTime]);
+    if (round === swapAt && !swapped) {
+      setShowSwapMsg(true);
+      return;
+    }
+    if (round < totalRounds) timerRef.current = performance.now();
+  }, [round, swapped, swapAt, totalRounds]);
+
+  // Handle swap message and wait for space
+  useEffect(() => {
+    if (showSwapMsg) {
+      const handleSpace = (e) => {
+        if (e.code === "Space") {
+          setSwapped(true);
+          setShowSwapMsg(false);
+        }
+      };
+      window.addEventListener("keydown", handleSpace);
+      return () => window.removeEventListener("keydown", handleSpace);
+    }
+  }, [showSwapMsg]);
+
+  // Save results at the end
+  useEffect(() => {
+    if (round === totalRounds && results.length === totalRounds) {
+      const child = JSON.parse(localStorage.getItem("childData"));
+      window.electronAPI.saveResultsToCSV({
+        childName: child.name,
+        results: results.map((r) => ({
+          runda: r.round,
+          forma: r.shownShape,
+          culoare: r.shownColor,
+          ales: r.chosen,
+          corect: r.correct ? 1 : 0,
+          timpRaspuns: r.responseTime,
+          regula: r.rule,
+        })),
+        gameName: "shape_color",
+      });
+    }
+  }, [round, results, totalRounds]);
+
+  if (showSwapMsg) {
+    return (
+      <div className="container">
+        <button
+          onClick={() => window.electronAPI.closeApp()}
+          className="close-btn"
+          title="Închide"
+        >
+          ×
+        </button>
+        <h2>Schimbare reguli!</h2>
+        <p>
+          <b>Regulile s-au schimbat!</b>
+          <br />
+          Acum trebuie să alegi după <b>culoare</b>!
+          <br />
+          Apasă <b>Space</b> pentru a continua.
+        </p>
+      </div>
+    );
+  }
+
+  if (round === totalRounds) {
+    const correctCount = results.filter((r) => r.correct).length;
+    const avgTime = Math.round(
+      results.reduce((a, b) => a + b.responseTime, 0) / results.length
+    );
+    return (
+      <div className="container">
+        <button
+          onClick={() => window.electronAPI.closeApp()}
+          className="close-btn"
+          title="Închide"
+        >
+          ×
+        </button>
+        <h2>Rezultate</h2>
+        <p>
+          Corecte: {correctCount} / {totalRounds}
+        </p>
+        <p>Timp mediu de răspuns: {avgTime} ms</p>
+        <button
+          onClick={() => navigate("/menu")}
+          className="block mt-2 bg-green-500 text-white px-3 py-2"
+        >
+          Înapoi la meniu
+        </button>
+      </div>
+    );
+  }
+
+  const shownIdx = roundsOrder[round];
+  const shown = images[shownIdx];
 
   return (
-    <div className="container">
-      <h2>Game 1: Movement Estimation</h2>
-      <p>Round {round + 1} of {images.length}</p>
-
-      <div
-        style={{
-          position: 'relative',
-          height: '120px',
-          border: '1px solid #ccc',
-          margin: '40px 0',
-          background: '#f8fafc',
-        }}
+    <div className="container-shape-color" tabIndex={0}>
+      <button
+        onClick={() => window.electronAPI.closeApp()}
+        className="close-btn"
+        title="Închide"
       >
+        ×
+      </button>
+      <h2>Jocul Formă & Culoare</h2>
+      <p style={{ textAlign: "center" }}>
+        {swapped
+          ? "Alege imaginea cu aceeași culoare ca cea de jos"
+          : "Alege imaginea cu aceeași formă ca cea de jos"}
+      </p>
+      <div className="top-images-row">
         <img
-          ref={figRef}
-          src={images[round]}
-          alt="figurine"
+          src={topImages[0].src}
+          alt={topImages[0].label}
+          className="top-image-shape-color"
           style={{
-            position: 'absolute',
-            top: '30px',
-            left: '0%',
-            width: '80px',
-            height: '80px',
-            objectFit: 'contain',
+            cursor: waiting ? "not-allowed" : "pointer",
+            border: "4px solid #ef4444",
           }}
+          onClick={() => handleChoice(0)}
+        />
+        <img
+          src={topImages[1].src}
+          alt={topImages[1].label}
+          className="top-image-shape-color"
+          style={{
+            cursor: waiting ? "not-allowed" : "pointer",
+            border: "4px solid #2563eb",
+          }}
+          onClick={() => handleChoice(1)}
         />
       </div>
-
-      {phase === 'idle' && <button onClick={startAnimation}>Start</button>}
-
-      {phase === 'animating' && <p>Watch the figurine move...</p>}
-
-      {phase === 'ready' && (
-        <p>Press <strong>Space</strong> to begin your timing guess.</p>
-      )}
-
-      {phase === 'timing' && (
-        <p>Press <strong>Space</strong> again when you think the figurine reaches the right edge.</p>
-      )}
-
-      {phase === 'result' && result && (
-        <div>
-          <p>
-            You were <strong>{Math.abs(result.error)}ms</strong> {result.direction}.
-          </p>
-          <button onClick={nextRound}>
-            {round + 1 < images.length ? 'Next Round' : 'Finish'}
-          </button>
-        </div>
-      )}
-
-      {phase === 'finished' && (
-        <div>
-          <h3>Game Over</h3>
-          <ul>
-            {results.map((r, i) => (
-              <li key={i}>
-                Round {r.round}: {Math.abs(r.error)}ms {r.direction}
-              </li>
-            ))}
-          </ul>
-          <button onClick={() => {
-            setRound(0);
-            setResults([]);
-            setPhase('idle');
-          }}>
-            Play Again
-          </button>
-          <button onClick={() => {
-            window.electronAPI.saveResultsToCSV(results);
-            navigate("/menu"); // 👈 Save via Electron
-          }}>
-            Go back to the menu
-          </button>
-        </div>
-      )}
+      <div className="bottom-image-area">
+        <img
+          src={shown.src}
+          alt={shown.shape + " " + shown.color}
+          className="bottom-image-shape-color"
+        />
+      </div>
+      <p>
+        Runda {round + 1} / {totalRounds}
+      </p>
     </div>
   );
-}
+};
+
+export default Game1;
