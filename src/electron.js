@@ -16,11 +16,11 @@ function createWindow() {
     win.close();
   });
 
-  if (isDev) {
-    win.loadURL('http://localhost:5173');
-  } else {
+  // if (isDev) {
+  //   win.loadURL('http://localhost:5173');
+  // } else {
     win.loadFile(path.join(__dirname, '../vite-out/index.html'));
-  }
+  // }
 }
 
 // Create child folder and info file
@@ -48,10 +48,10 @@ ipcMain.on('save-to-csv', (event, { childName, results, gameName }) => {
 
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
   let headers = '';
-  let lines;
+  let lines = '';
 
   if (gameName === 'questionnaire') {
-    headers = 'QuestionID,Answer,ResponseTime(ms),QuestionType\n';
+    headers = 'IntrebareID,Raspuns,TimpRăspuns(ms),TipIntrebare\n';
     lines = results.map(r =>
       `${r.questionID},"${r.answer}",${r.responseTime},${r.questionType}`
     ).join('\n');

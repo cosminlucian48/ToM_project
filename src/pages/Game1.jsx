@@ -161,7 +161,7 @@ const Game1 = () => {
   const shown = images[shownIdx];
 
   return (
-    <div className="container-shape-color" tabIndex={0}>
+    <div className="container" tabIndex={0}>
       <button
         onClick={() => window.electronAPI.closeApp()}
         className="close-btn"

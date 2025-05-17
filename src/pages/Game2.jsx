@@ -31,7 +31,7 @@ const Game2 = () => {
   };
 
   // For CSV: game state
-  const getGameState = () => (swapped ? "swapped" : "normal");
+  const getGameState = () => (swapped ? "inversat" : "normal");
 
   useEffect(() => {
     if (round < totalRounds) {
@@ -54,7 +54,7 @@ const Game2 = () => {
             {
               round: round + 1,
               shown: images[imgIdx].label,
-              pressed: e.key === "ArrowLeft" ? "sun" : "moon",
+              pressed: e.key === "ArrowLeft" ? "soare" : "luna",
               correct,
               responseTime: Math.round(responseTime),
               gameState: getGameState(),
@@ -191,7 +191,7 @@ const Game2 = () => {
           </ul>
         )}
       </div>
-      <div className="image-area">
+      <div className="image-area-2">
         <img
           src={currentImg.src}
           alt={currentImg.label}

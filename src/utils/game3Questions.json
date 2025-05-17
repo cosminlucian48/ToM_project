@@ -3,7 +3,7 @@
     "questionID": "q1",
     "number": 1,
     "textTop": "Aici avem o cutie.",
-    "asset": "/assets/game3/cutie.png",
+    "asset": "assets/game3/cutie.png",
     "text": "Ce credeți că se află în cutie?",
     "answerType": "textbox"
   },
@@ -11,7 +11,7 @@
     "questionID": "q2",
     "number": 2,
     "textTop": "Haide să vedem ce se află în cutie. Uite, este un aparat de fotografiat.",
-    "asset": "/assets/game3/cutie_deschisa.png",
+    "asset": "assets/game3/cutie_deschisa.png",
     "text": "Ce se află în cutie?",
     "answerType": "textbox"
   },
@@ -19,7 +19,7 @@
     "questionID": "q3",
     "number": 3,
     "textTop": "Ea este Ioana. Ea nu a mai văzut niciodată cutia și nici nu a deschis-o.",
-    "asset": "/assets/game3/ioana.png",
+    "asset": "assets/game3/ioana.png",
     "text": "",
     "answerType": "multi-radio",
     "radioGroups": [
@@ -37,7 +37,7 @@
     "questionID": "q4",
     "number": 4,
     "textTop": "Aceasta este o cutie de chibrituri.",
-    "asset": "/assets/game3/cutie_chibrituri.png",
+    "asset": "assets/game3/cutie_chibrituri.png",
     "text": "Ce credeți că se află în cutie?",
     "answerType": "textbox"
   },
@@ -45,7 +45,7 @@
     "questionID": "q5",
     "number": 5,
     "textTop": "Ia uite, se pare că în cutie se află monede.",
-    "asset": "/assets/game3/cutie_chibrituri_deschisa.png",
+    "asset": "assets/game3/cutie_chibrituri_deschisa.png",
     "text": "Deci, ce se află în cutie?",
     "answerType": "textbox"
   },
@@ -53,7 +53,7 @@
     "questionID": "q6",
     "number": 6,
     "textTop": "El este Matei. Matei nu s-a uitat niciodată în acea cutie de chibrituri.",
-    "asset": "/assets/game3/matei.png",
+    "asset": "assets/game3/matei.png",
     "text": "Ce crede Matei că se află în cutie?",
     "answerType": "textbox"
   },
@@ -69,7 +69,7 @@
     "questionID": "q8",
     "number": 8,
     "textTop": "Un băiat și prietenii lui se jucau. O fată l-a tachinat pe băiat și ceilalți au râs. Băiatul nu a râs. Nu credea că este amuzant. Dar băiatul nu a vrut ca ceilalți să vadă cum se simte. Dacă prietenii lui ar vedea cum se simte, l-ar numi plângăcios.",
-    "asset": "/assets/game3/tachinare.png",
+    "asset": "assets/game3/tachinare.png",
     "text": "Cum s-a simțit cu adevărat băiatul când toată lumea a râs și l-a tachinat? ",
     "answerType": "radio",
     "options": ["Trist", "Fericit", "Indiferent"]
@@ -102,7 +102,7 @@
     "textTop": "O fată și un băiat merg la un picnic. Este ideea băiatului. El spune că va fi o zi însorită, minunată. Dar când scot mâncarea afară, vin nori mari de furtună. Plouă și toată mâncarea se udă. Fata spune: „Este o zi minunată pentru un picnic”. ",
     "text": "",
     "answerType": "multi-radio",
-    "asset": "/assets/game3/sarcasm.png",
+    "asset": "assets/game3/sarcasm.png",
     "radioGroups": [
       {
         "label": "Este adevărat ceea ce a spus fata?",

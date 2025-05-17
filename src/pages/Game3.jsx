@@ -57,7 +57,7 @@ const Game3 = () => {
             ? radioValue
             : inputValue.trim(),
         responseTime,
-        questionType: q.answerType
+        questionType: q.answerType,
       },
     ]);
     setRound((r) => r + 1);
@@ -102,15 +102,21 @@ const Game3 = () => {
         <p style={{ fontWeight: "bold", marginBottom: 12 }}>{q.textTop}</p>
       )}
       {q.asset && (
-        <div style={{ textAlign: "center", marginBottom: 24 }}>
+        <div style={{ textAlign: "center", marginBottom: 16 }}>
           <img
             src={q.asset}
             alt="Întrebare"
-            style={{ maxWidth: 600, maxHeight: 400, objectFit: "contain" }}
+            style={{
+              maxWidth: "90vw",
+              maxHeight: "37vh",
+              objectFit: "contain",
+              display: "block",
+              margin: "0 auto 12px auto",
+            }}
           />
         </div>
       )}
-      <p style={{ fontSize: "1.2rem", marginBottom: 16 }}>{q.text}</p>
+      <p style={{ fontSize: "1rem", marginBottom: 16 }}>{q.text}</p>
       {q.answerType === "textbox" && (
         <input
           type="text"
@@ -144,8 +150,8 @@ const Game3 = () => {
       {q.answerType === "multi-radio" && (
         <div>
           {q.radioGroups.map((group, groupIdx) => (
-            <div key={groupIdx} style={{ marginBottom: 16 }}>
-              <div style={{ marginBottom: 6, fontWeight: 500 }}>
+            <div key={groupIdx} style={{ marginBottom: 8 }}>
+              <div style={{ marginBottom: 3, fontWeight: 300 }}>
                 {group.label}
               </div>
               <div className="radio-group">

@@ -26,14 +26,19 @@ h1, h2 {
 }
 
 .container {
-    max-width: 600px;
-    width: 100%;
+    max-width: 900px;
+    width: 80vw;
+    min-width: 320px;
+    margin: 18px auto;
     background: #23232a;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-    margin: 0;
+    padding: 18px 2vw 18px 2vw;
+    border-radius: 14px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.5);
     position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    overflow-x: auto;
 }
 
 input, button {
@@ -117,28 +122,38 @@ button:hover {
     border-color: #fff;
 }
 
-.image-area {
+.image-area, .bottom-image-area {
     width: 100%;
-    height: 60vh;
+    height: 32vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 40px 0;
+    margin: 16px 0;
     background: #18181b;
     border-radius: 12px;
     overflow: hidden;
 }
 
-.game-image {
-    max-width: 90vw;
-    max-height: 60vh;
-    width: auto;
-    height: auto;
-    transition: opacity 0.2s;
-    display: block;
-    margin: 0 auto;
-    object-fit: contain;
+.image-area-2{
+    width: 100%;
+    height: 44vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 16px 0;
+    background: #18181b;
+    border-radius: 12px;
+    overflow: hidden;
 }
+
+img, .game-image {
+    max-width: 96vw;
+    max-height: 48vh;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto 12px auto;
+}
+
 
 .instructions-list {
   list-style: none;
@@ -157,51 +172,37 @@ button:hover {
   margin-right: 8px;
 }
 
-.container-shape-color {
-    max-width: 1200px;
-    min-width: 800px;
-    min-height: 700px;
-    width: 90vw;
-    height: 90vh;
-    margin: 40px auto;
-    background: #23232a;
-    padding: 40px 40px 24px 40px;
-    border-radius: 18px;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.6);
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-}
+
 .top-images-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 48px;
-    gap: 40px;
+    margin-bottom: 16px;
+    gap: 16px;
 }
 .top-image-shape-color {
     flex: 1 1 0;
-    max-width: 720px;
-    max-height: 520px;
-    min-width: 400px;
-    min-height: 240px;
+    max-width: 432px;
+    max-height: 312px;
+    min-width: 240px;
+    min-height: 144px;
     object-fit: contain;
     border-radius: 16px;
     transition: box-shadow 0.2s;
 }
-.top-image-shape-color:hover {
-    box-shadow: 0 0 0 4px #fff3;
+.top-image-shape-color {
+    flex: 1 1 0;
+    max-width: 340px;
+    max-height: 240px;
+    min-width: 120px;
+    min-height: 80px;
+    object-fit: contain;
+    border-radius: 16px;
+    transition: box-shadow 0.2s;
 }
-.bottom-image-area {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 260px;
-    margin-bottom: 24px;
-}
+
 .bottom-image-shape-color {
-    max-height: 220px;
+    max-height: 200px;
     max-width: 320px;
     object-fit: contain;
     border-radius: 14px;
@@ -214,19 +215,19 @@ button:hover {
 
 .radio-group {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-    margin-bottom: 24px;
+    flex-direction: row;   /* Changed from column to row */
+    align-items: center;
+    gap: 8px;              /* Slightly larger gap for horizontal layout */
+    margin-bottom: 4px;
 }
 
 .radio-label {
     display: flex;
     align-items: center;
-    font-size: 1.1rem;
+    font-size: 1rem;
     background: #23232a;
     border-radius: 8px;
-    padding: 10px 18px;
+    padding: 6px 8px;
     cursor: pointer;
     transition: background 0.2s, box-shadow 0.2s;
     border: 2px solid transparent;
